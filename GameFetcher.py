@@ -1,5 +1,6 @@
 from boardgamegeek import BGGClient, BGGItemNotFoundError
 
+
 def main():
     print(fetch("Terraforming Mars"))
 
@@ -9,7 +10,8 @@ def fetch(name):
     try:
         return bgg.game(name)
     except BGGItemNotFoundError:
-        return null
+        return None
+
 
 if __name__ == "__main__":
     main()
