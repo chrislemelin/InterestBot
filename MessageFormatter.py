@@ -35,12 +35,23 @@ def modify_content(current_content, user, reaction):
         reaction_and_user_list.append((
             broken_up_context[current_index*2], broken_up_context[current_index*2+1]))
 
-    list_without_user = list(filter(lambda content_pair: mention_string_to_user_id(
-        content_pair[1]) != str(user.id), reaction_and_user_list))
-    if (len(list_without_user) == len(reaction_and_user_list)):
-        list_without_user.append(
+    found_user = list(filter(lambda content_pair: mention_string_to_user_id(
+        content_pair[1]) == str(user.id), reaction_and_user_list))
+
+    if (len(found_user) != 0):
+        found_user = found_user[0]
+        if (found_user[0] == reaction.emoji):
+            list_without_user = list(filter(lambda content_pair: mention_string_to_user_id(
+                content_pair[1]) != str(user.id), reaction_and_user_list))
+            return reaction_and_user_list_to_string(list_without_user)
+        else:
+            list_with_updated_user = list(map(lambda content_pair: content_pair if mention_string_to_user_id(
+                content_pair[1]) != str(user.id) else (reaction.emoji, user_id_to_mention_string(user.id)), reaction_and_user_list))
+            return reaction_and_user_list_to_string(list_with_updated_user)
+    else:
+        reaction_and_user_list.append(
             (reaction.emoji, user_id_to_mention_string(user.id)))
-    return reaction_and_user_list_to_string(list_without_user)
+        return reaction_and_user_list_to_string(reaction_and_user_list)
 
 
 def user_id_to_mention_string(user_id):
@@ -55,5 +66,5 @@ def reaction_and_user_list_to_string(reaction_and_user_list):
     content_string = ""
     for reaction_and_user in reaction_and_user_list:
         content_string = content_string + \
-            str(reaction_and_user[0]) + " " + str(reaction_and_user[1])
+            str(reaction_and_user[0]) + " " + str(reaction_and_user[1] + " ")
     return content_string
