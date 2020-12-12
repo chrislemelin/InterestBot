@@ -1,7 +1,12 @@
+import os
 import discord
 from discord.ext import commands
 import GameFetcher
 import MessageFormatter
+from dotenv import load_dotenv
+load_dotenv()
+token = os.environ.get("api-token")
+
 
 thumbsUp = "👍"
 canTeach = "📖"
@@ -38,4 +43,4 @@ async def getGame(ctx, game_name: str):
         print(sent_message)
         await sent_message.add_reaction(thumbsUp)
 
-bot.run(secret)
+bot.run(token)
